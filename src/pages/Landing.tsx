@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Row, Col, Card, Tooltip, OverlayTrigger, Button, Form } from "react-bootstrap";
-import type { PaginationProps } from 'antd';
+import type { PaginationProps, FormProps, InputProps } from 'antd';
 import { Pagination } from 'antd';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -11,16 +11,41 @@ import Blank from "../components/DefaultBlankPhotos";
 import { useNavigate } from "react-router-dom"
 import "./pagination.css"
 
+interface Movie {
+    poster_path: string,
+    adult: boolean,
+    overview: string,
+    release_date: string,
+    genre_ids: number[],
+    id: number,
+    original_title: string,
+    original_language: string,
+    title: string,
+    backdrop_path: string | null,
+    popularity: number,
+    vote_count: number,
+    video: boolean,
+    vote_average: number
+}
+interface GetMovieResult {
+    page: number,
+    results: Movie[],
+    total_results: number,
+    total_pages: number
+}
+interface PaginationInterface {
+    current: number,
+    totalData: number
+}
 
 const Landing: React.FC = () => {
     const apiKey: string = import.meta.env.VITE_API_KEY
     const navigate = useNavigate()
-    const initialMovie: any[] = []
     const [searchInput, setSearchInput] = useState("")
-    const [mode, setMode] = useState("popular")
-    const [movieList, setMovieList] = useState(initialMovie)
-    const [loading, setLoading] = useState(true)
-    const [page, setPage] = useState({
+    const [mode, setMode] = useState<string>("popular")
+    const [movieList, setMovieList] = useState<Movie[]>([])
+    const [loading, setLoading] = useState<Boolean>(true)
+    const [page, setPage] = useState<PaginationInterface>({
         current: 1,
         totalData: 0
     })
@@ -40,12 +65,12 @@ const Landing: React.FC = () => {
         setMode("popular")
         setLoading(true)
         const url: string = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`
-        axios.get(url)
+        axios.get<GetMovieResult>(url)
             .then((result) => {
-                setMovieList(result?.data?.results)
+                setMovieList(result.data.results)
                 setPage({
                     ...page,
-                    totalData: result?.data?.total_results
+                    totalData: result.data.total_results
                 })
             })
             .catch((error) => {
@@ -65,13 +90,13 @@ const Landing: React.FC = () => {
         setMovieList([])
         setLoading(true)
         const url: string = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&page=${pageNumber}&query=${encodeURIComponent(keyword)}`
-        axios.get(url)
+        axios.get<GetMovieResult>(url)
             .then((result) => {
                 setPage({
                     ...page,
-                    totalData: result?.data?.total_results
+                    totalData: result.data.total_results
                 })
-                setMovieList(result?.data?.results)
+                setMovieList(result.data.results)
 
             })
             .catch((error) => {
@@ -86,8 +111,8 @@ const Landing: React.FC = () => {
                 setLoading(false)
             })
     }
-    const handleSearch = (e: any) => {
-        e.preventDefault()
+    const handleSearch: FormProps['onSubmitCapture'] = (event) => {
+        event.preventDefault()
         setPage({
             current: 1,
             totalData: 0
@@ -98,8 +123,8 @@ const Landing: React.FC = () => {
             searchMovie(searchInput, 1)
         }
     }
-    const handleChange = (e: any) => {
-        setSearchInput(e.target.value)
+    const handleChange: InputProps['onChange'] = (event) => {
+        setSearchInput(event.target.value)
     }
     const handleClickDetail = (movieId: number) => {
         navigate("/detail/" + movieId)
@@ -108,6 +133,7 @@ const Landing: React.FC = () => {
         document.title = "Edo Movies | Home"
         getPopularMovie(page.current)
     }, [])
+
     useEffect(() => {
         if (mode === "popular") {
             getPopularMovie(page.current)
@@ -146,7 +172,7 @@ const Landing: React.FC = () => {
                                 <h2 className="text-white">No Movies Found</h2>
                             </Col>
                         )
-                            : movieList?.map((data: any, index: number) => (
+                            : movieList.map((data, index) => (
                                 <Col className="align-content-center mb-4" lg={2} md={3} sm={4} xs={6} key={index}>
                                     <Card style={{ minWidth: '90%', minHeight: '100%', border: 'none' }}>
                                         <Card.Img
