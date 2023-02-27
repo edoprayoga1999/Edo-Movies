@@ -12,26 +12,26 @@ import { useNavigate } from "react-router-dom"
 import "./pagination.css"
 
 interface Movie {
-    poster_path: string,
-    adult: boolean,
-    overview: string,
-    release_date: string,
-    genre_ids: number[],
-    id: number,
-    original_title: string,
-    original_language: string,
-    title: string,
-    backdrop_path: string | null,
-    popularity: number,
-    vote_count: number,
-    video: boolean,
-    vote_average: number
+    poster_path?: string,
+    adult?: boolean,
+    overview?: string,
+    release_date?: string,
+    genre_ids?: number[],
+    id?: number,
+    original_title?: string,
+    original_language?: string,
+    title?: string,
+    backdrop_path?: string | null,
+    popularity?: number,
+    vote_count?: number,
+    video?: boolean,
+    vote_average?: number
 }
 interface GetMovieResult {
-    page: number,
-    results: Movie[],
-    total_results: number,
-    total_pages: number
+    page?: number,
+    results?: Movie[],
+    total_results?: number,
+    total_pages?: number
 }
 interface PaginationInterface {
     current: number,
@@ -67,10 +67,10 @@ const Landing: React.FC = () => {
         const url: string = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`
         axios.get<GetMovieResult>(url)
             .then((result) => {
-                setMovieList(result.data.results)
+                setMovieList(result.data.results || [])
                 setPage({
                     ...page,
-                    totalData: result.data.total_results
+                    totalData: result.data.total_results || 0
                 })
             })
             .catch((error) => {
@@ -94,9 +94,9 @@ const Landing: React.FC = () => {
             .then((result) => {
                 setPage({
                     ...page,
-                    totalData: result.data.total_results
+                    totalData: result.data.total_results || 0
                 })
-                setMovieList(result.data.results)
+                setMovieList(result.data.results || [])
 
             })
             .catch((error) => {
@@ -196,12 +196,16 @@ const Landing: React.FC = () => {
                                                 <Card.Title className="text-truncate text-center text-white" >{`${data.title} (${data.original_title})`}</Card.Title>
                                             </OverlayTrigger>
                                             <Card.Text className="text-center text-white">
-                                                <FontAwesomeIcon icon={faStar} style={{ color: 'orange' }} /> {data.vote_average} ({moment(data.release_date, "YYYY-MM-DD").format("YYYY")})
+                                                <FontAwesomeIcon icon={faStar} style={{ color: 'orange' }} /> {data.vote_average} ({data.release_date ? moment(data.release_date, "YYYY-MM-DD").format("YYYY") : "Unknown"})
                                             </Card.Text>
                                         </Card.Body>
                                         <Card.Body className="bg-dark">
                                             <Row>
-                                                <Button variant="warning" onClick={() => { handleClickDetail(data.id) }}>Detail</Button>
+                                                <Button 
+                                                    variant="warning"
+                                                    onClick={() => data.id ? handleClickDetail(data.id) : alert("Movie Detail Is Not Available")}
+                                                >Detail
+                                                </Button>
                                             </Row>
                                         </Card.Body>
                                     </Card>

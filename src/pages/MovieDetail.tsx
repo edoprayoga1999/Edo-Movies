@@ -8,49 +8,49 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 interface Genres {
-    id: number,
-    name: string
+    id?: number,
+    name?: string
 }
 interface ProductionCompanies {
-    name: string,
-    id: number,
-    logo_path: string | null,
-    origin_country: string
+    name?: string,
+    id?: number,
+    logo_path?: string | null,
+    origin_country?: string
 }
 interface ProductionCountries {
-    iso_3166_1: string,
-    name: string,
+    iso_3166_1?: string,
+    name?: string,
 }
 interface SpokenLanguages {
-    iso_639_1: string,
-    name: string,
+    iso_639_1?: string,
+    name?: string,
 }
 interface MovieDetailInterface {
-    adult: boolean,
-    backdrop_path: string | null,
-    belongs_to_collection: null | object,
-    budget: number,
-    genres: Genres[],
-    homepage: string | null,
-    id: number,
-    imdb_id: string | null,
-    original_language: string,
-    original_title: string,
-    overview: string | null,
-    popularity: number,
-    poster_path: string | null,
-    production_companies: ProductionCompanies[],
-    production_countries: ProductionCountries[],
-    release_date: string,
-    revenue: number,
-    runtime: number | null,
-    spoken_languages: SpokenLanguages[],
-    status: "Rumored" | "Planned" | "In Production" | "Post Production" | "Released" | "Canceled",
-    tagline: string | null,
-    title: string,
-    video: boolean,
-    vote_average: number,
-    vote_count: number,
+    adult?: boolean,
+    backdrop_path?: string | null,
+    belongs_to_collection?: null | object,
+    budget?: number,
+    genres?: Genres[],
+    homepage?: string | null,
+    id?: number,
+    imdb_id?: string | null,
+    original_language?: string,
+    original_title?: string,
+    overview?: string | null,
+    popularity?: number,
+    poster_path?: string | null,
+    production_companies?: ProductionCompanies[],
+    production_countries?: ProductionCountries[],
+    release_date?: string,
+    revenue?: number,
+    runtime?: number | null,
+    spoken_languages?: SpokenLanguages[],
+    status?: "Rumored" | "Planned" | "In Production" | "Post Production" | "Released" | "Canceled",
+    tagline?: string | null,
+    title?: string,
+    video?: boolean,
+    vote_average?: number,
+    vote_count?: number,
 }
 
 const MovieDetail: React.FC = () => {
@@ -111,14 +111,14 @@ const MovieDetail: React.FC = () => {
                                 </Col>
                                 <Col lg={8} md={12}>
                                     <div className='d-flex flex-column'>
-                                        <h2 className='text-white'>{movieDetail.original_title} (<FontAwesomeIcon icon={faStar} style={{ color: 'orange' }} /> {movieDetail.vote_average.toFixed(2)})</h2>
+                                        <h2 className='text-white'>{movieDetail.original_title} (<FontAwesomeIcon icon={faStar} style={{ color: 'orange' }} /> {movieDetail.vote_average ? movieDetail.vote_average.toFixed(2) : "None"})</h2>
                                         <h6 className='text-white'>Release Date: {movieDetail.release_date}</h6>
                                         <h6 className='text-white'>Status: {movieDetail.status}</h6>
                                         <h6 className='text-white'>{movieDetail.tagline}</h6>
                                         <div className='d-flex w-50 mb-4'>
                                             <span className='text-white' style={{ marginRight: 5 }}>Genres:</span>
                                             {
-                                                movieDetail.genres.length ? movieDetail.genres.map((data, index) => (
+                                                movieDetail.genres && movieDetail.genres.length ? movieDetail.genres.map((data, index) => (
                                                     <>
                                                         <Badge
                                                             bg='warning'
