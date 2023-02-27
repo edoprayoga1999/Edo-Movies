@@ -167,7 +167,7 @@ const Landing: React.FC = () => {
                     loading ? (
                         <ReactLoading type="bars" color="#ffc107" />
                     )
-                        : !movieList?.length ? (
+                        : !movieList.length ? (
                             <Col className="align-content-center mb-4">
                                 <h2 className="text-white">No Movies Found</h2>
                             </Col>
@@ -178,7 +178,7 @@ const Landing: React.FC = () => {
                                         <Card.Img
                                             className="bg-black"
                                             variant="top"
-                                            src={data?.poster_path ? `https://image.tmdb.org/t/p/w200${data?.poster_path}` : "data:image/jpeg;base64," + Blank}
+                                            src={data.poster_path ? `https://image.tmdb.org/t/p/w200${data.poster_path}` : "data:image/jpeg;base64," + Blank}
                                             style={{
                                                 width: "100%",
                                                 height: '300px'
@@ -189,19 +189,19 @@ const Landing: React.FC = () => {
                                                 placement="top"
                                                 overlay={
                                                     <Tooltip id="tooltip-top">
-                                                        {`${data?.title} (${data?.original_title})`}
+                                                        {`${data.title} (${data.original_title})`}
                                                     </Tooltip>
                                                 }
                                             >
-                                                <Card.Title className="text-truncate text-center text-white" >{`${data?.title} (${data?.original_title})`}</Card.Title>
+                                                <Card.Title className="text-truncate text-center text-white" >{`${data.title} (${data.original_title})`}</Card.Title>
                                             </OverlayTrigger>
                                             <Card.Text className="text-center text-white">
-                                                <FontAwesomeIcon icon={faStar} style={{ color: 'orange' }} /> {data?.vote_average} ({moment(data?.release_date, "YYYY-MM-DD").format("YYYY")})
+                                                <FontAwesomeIcon icon={faStar} style={{ color: 'orange' }} /> {data.vote_average} ({moment(data.release_date, "YYYY-MM-DD").format("YYYY")})
                                             </Card.Text>
                                         </Card.Body>
                                         <Card.Body className="bg-dark">
                                             <Row>
-                                                <Button variant="warning" onClick={() => { handleClickDetail(data?.id) }}>Detail</Button>
+                                                <Button variant="warning" onClick={() => { handleClickDetail(data.id) }}>Detail</Button>
                                             </Row>
                                         </Card.Body>
                                     </Card>
