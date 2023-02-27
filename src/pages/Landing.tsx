@@ -155,7 +155,7 @@ const Landing: React.FC = () => {
                             <Col sm={12} md={4}>
                                 <Form.Group className="mb-3" controlId="formBasicEmail">
                                     <Form.Label className="text-white">Search Movie</Form.Label>
-                                    <Form.Control onChange={handleChange} type="text" placeholder="Enter movie title" />
+                                    <Form.Control onChange={handleChange} type="text" placeholder="Press ENTER to search" />
                                 </Form.Group>
                             </Col>
                         </Row>
