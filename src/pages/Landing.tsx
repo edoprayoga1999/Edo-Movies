@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { Container, Row, Col, Card, Tooltip, OverlayTrigger, Button, Form } from "react-bootstrap";
 import type { PaginationProps, FormProps, InputProps } from 'antd';
 import { Pagination } from 'antd';
@@ -10,34 +10,7 @@ import ReactLoading from "react-loading";
 import Blank from "../components/DefaultBlankPhotos";
 import { useNavigate } from "react-router-dom"
 import "./pagination.css"
-
-interface Movie {
-    poster_path?: string,
-    adult?: boolean,
-    overview?: string,
-    release_date?: string,
-    genre_ids?: number[],
-    id?: number,
-    original_title?: string,
-    original_language?: string,
-    title?: string,
-    backdrop_path?: string | null,
-    popularity?: number,
-    vote_count?: number,
-    video?: boolean,
-    vote_average?: number
-}
-interface GetMovieResult {
-    page?: number,
-    results?: Movie[],
-    total_results?: number,
-    total_pages?: number
-}
-interface PaginationInterface {
-    current: number,
-    totalData: number
-}
-
+import type { Movie, GetMovieResult, PaginationInterface } from "../types/landing_types";
 const Landing: React.FC = () => {
     const apiKey: string = import.meta.env.VITE_API_KEY
     const navigate = useNavigate()
@@ -65,15 +38,15 @@ const Landing: React.FC = () => {
         setMode("popular")
         setLoading(true)
         const url: string = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`
-        axios.get<GetMovieResult>(url)
-            .then((result) => {
+        axios.get(url)
+            .then((result: AxiosResponse<GetMovieResult>) => {
                 setMovieList(result.data.results || [])
                 setPage({
                     ...page,
                     totalData: result.data.total_results || 0
                 })
             })
-            .catch((error) => {
+            .catch((error: AxiosError | Error) => {
                 setMovieList([])
                 setPage({
                     current: 1,
@@ -90,8 +63,8 @@ const Landing: React.FC = () => {
         setMovieList([])
         setLoading(true)
         const url: string = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&page=${pageNumber}&query=${encodeURIComponent(keyword)}`
-        axios.get<GetMovieResult>(url)
-            .then((result) => {
+        axios.get(url)
+            .then((result: AxiosResponse<GetMovieResult>) => {
                 setPage({
                     ...page,
                     totalData: result.data.total_results || 0
@@ -99,7 +72,7 @@ const Landing: React.FC = () => {
                 setMovieList(result.data.results || [])
 
             })
-            .catch((error) => {
+            .catch((error: AxiosError | Error) => {
                 setPage({
                     current: 1,
                     totalData: 0
@@ -201,7 +174,7 @@ const Landing: React.FC = () => {
                                         </Card.Body>
                                         <Card.Body className="bg-dark">
                                             <Row>
-                                                <Button 
+                                                <Button
                                                     variant="warning"
                                                     onClick={() => data.id ? handleClickDetail(data.id) : alert("Movie Detail Is Not Available")}
                                                 >Detail
